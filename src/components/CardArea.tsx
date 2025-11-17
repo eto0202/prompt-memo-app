@@ -1,62 +1,17 @@
 import Box from "@mui/material/Box";
 import { PromptCard } from "./PromptCard";
+import type { PromptMemo } from "../types/PromptMemo";
 
-const dummyPrompts = [
-  {
-    id: "001",
-    name: "Character A",
-    date: "2023/10/01",
-    mainPrompt: "1girl, solo, long hair, red eyes...",
-    subPrompt: "1girl, solo, long hair, red eyes...",
-    imageUrl: "https://via.placeholder.com/100",
-  },
-  {
-    id: "002",
-    name: "Character B",
-    date: "2023/10/01",
-    mainPrompt: "1girl, solo, long hair, red eyes...",
-    subPrompt: "1girl, solo, long hair, red eyes...",
-    imageUrl: "https://via.placeholder.com/100",
-  },
-  {
-    id: "003",
-    name: "Sci-fi Landscape",
-    date: "2023/10/01",
-    mainPrompt: "1girl, solo, long hair, red eyes...",
-    subPrompt: "1girl, solo, long hair, red eyes...",
-    imageUrl: "https://via.placeholder.com/100",
-  },
-  {
-    id: "003",
-    name: "Sci-fi Landscape",
-    date: "2023/10/01",
-    mainPrompt: "1girl, solo, long hair, red eyes...",
-    subPrompt: "1girl, solo, long hair, red eyes...",
-    imageUrl: "https://via.placeholder.com/100",
-  },
-  {
-    id: "003",
-    name: "Sci-fi Landscape",
-    date: "2023/10/01",
-    mainPrompt: "1girl, solo, long hair, red eyes...",
-    subPrompt: "1girl, solo, long hair, red eyes...",
-    imageUrl: "https://via.placeholder.com/100",
-  },
-];
+type Props = {
+  memos: PromptMemo[];
+  onSelectMemo: (id: string) => void;
+};
 
-export function CardArea() {
+export function CardArea({ memos, onSelectMemo }: Props) {
   return (
     <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-      {dummyPrompts.map((prompt) => (
-        <PromptCard
-          key={prompt.id}
-          id={prompt.id}
-          date={prompt.date}
-          name={prompt.name}
-          mainPrompt={prompt.mainPrompt}
-          subPrompt={prompt.subPrompt}
-          imageUrl={prompt.imageUrl}
-        ></PromptCard>
+      {memos.map((memo) => (
+        <PromptCard key={memo.id} memo={memo} onClick={() => onSelectMemo(memo.id)}></PromptCard>
       ))}
     </Box>
   );

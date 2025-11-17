@@ -41,7 +41,7 @@ export function CustomTextField({ isCopy, isZoom, ...props }: Props) {
             top: 0,
             right: 24,
             zIndex: 1,
-            color: "action",
+            color: "grey.500",
             "&:hover": {
               color: "primary.main",
               backgroundColor: "transparent",
@@ -70,7 +70,7 @@ export function CustomTextField({ isCopy, isZoom, ...props }: Props) {
             top: 0,
             right: 0,
             zIndex: 1,
-            color: "action",
+            color: "grey.500",
             "&:hover": {
               color: "primary.main",
               backgroundColor: "transparent",

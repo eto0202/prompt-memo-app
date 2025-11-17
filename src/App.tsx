@@ -3,6 +3,10 @@ import Box from "@mui/material/Box";
 import { CardArea } from "./components/CardArea";
 import { DetailArea } from "./components/DetailArea";
 import { ControlForm } from "./components/ControlForm";
+import { useState } from "react";
+import { createNewPromptMemo } from "./utils/memoUtils";
+import type { PromptMemo } from "./types/PromptMemo";
+import { DUMMY_MEMOS } from "./data/DummyMemos";
 
 /*
  * TODO:
@@ -11,10 +15,24 @@ import { ControlForm } from "./components/ControlForm";
  *  - コピーボタンを押した際に選択画面をポップアップで表示。
  *  - 拡大ボタンを押した際にTextField全体をポップアップで表示。
  *  - 画像選択機能の実装。
- *  - promptの型ファイルを作成。
  */
 
 function App() {
+  const [memos, setMemos] = useState<PromptMemo[]>(DUMMY_MEMOS);
+  const [selectedMemoId, setSelectedMemoId] = useState<string | null>(null);
+
+  const handleAddNewMemo = () => {
+    const newMemo = createNewPromptMemo();
+
+    setMemos([newMemo, ...memos]);
+    setSelectedMemoId(newMemo.id);
+  };
+
+  const handleSelectMemo = (id: string) => {
+    console.log(`${id}`);
+    setSelectedMemoId(id);
+  };
+
   return (
     <>
       <CssBaseline>
@@ -24,7 +42,7 @@ function App() {
             sx={{
               width: 400,
               flexShrink: 0,
-              boxShadow: 3,
+              boxShadow: 2,
               p: 3,
               height: "100vh",
               overflowY: "auto",
@@ -51,10 +69,10 @@ function App() {
                 zIndex: 1,
               }}
             >
-              <ControlForm></ControlForm>
+              <ControlForm onClick={handleAddNewMemo}></ControlForm>
             </Box>
             <Box sx={{ p: 3 }}>
-              <CardArea></CardArea>
+              <CardArea memos={memos} onSelectMemo={handleSelectMemo}></CardArea>
             </Box>
           </Box>
         </Box>

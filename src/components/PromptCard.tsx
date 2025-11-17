@@ -6,47 +6,62 @@ import Button from "@mui/material/Button";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
 import Box from "@mui/material/Box";
+import type { PromptMemo } from "../types/PromptMemo";
 
 type Props = {
-  id: string;
-  date: string;
-  name?: string;
-  imageUrl?: string;
-  mainPrompt?: string;
-  subPrompt?: string;
-  negativePrompt?: string;
-  lora?: string;
-  loraUrl?: string;
-  others?: string;
+  memo: PromptMemo;
+  onClick: () => void;
 };
 
-export function PromptCard(props: Props) {
+export function PromptCard({ memo, onClick }: Props) {
   return (
     <Card sx={{ width: 440 }}>
-      <CardActionArea sx={{ display: "flex" }}>
+      <CardActionArea sx={{ display: "flex", alignItems: "flex-start" }} onClick={onClick}>
         <CardMedia
           component="img"
-          image={props.imageUrl}
-          alt={props.name}
+          image={
+            memo.thumbnailUrl || "https://placehold.jp/bbbbbb/ffffff/150x150.png?text=No%20Image"
+          }
+          alt={memo.characterName}
           sx={{
             height: 150,
             width: 150,
+            flexShrink: 0,
           }}
         ></CardMedia>
-        <CardContent sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-          <Box color="text.secondary" sx={{ m: "0 0 0 auto" }}>
-            {props.date}
+        <CardContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            minWidth: 0,
+          }}
+        >
+          <Box color="text.secondary" sx={{ textAlign: "right" }}>
+            {memo.updatedAt}
           </Box>
-          <Typography gutterBottom variant="h5" component="div">
-            {props.name}
+          <Typography gutterBottom variant="h5" component="div" noWrap>
+            {memo.characterName}
           </Typography>
-          <Typography variant="body2" color="text.secondary" noWrap>
-            <Box>{props.mainPrompt}</Box>
-            <Box>{props.subPrompt}</Box>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: "3",
+              WebkitBoxOrient: "vertical",
+            }}
+          >
+            <Box>{memo.mainPrompt}</Box>
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
+        <Button size="small" variant="text" color="error" sx={{ m: "0 auto 0 0" }}>
+          delete
+        </Button>
         <Button size="small" variant="text" sx={{ m: "0 0 0 auto" }}>
           copy
         </Button>

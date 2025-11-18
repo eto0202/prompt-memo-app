@@ -23,14 +23,21 @@ function App() {
 
   const handleAddNewMemo = () => {
     const newMemo = createNewPromptMemo();
+    console.log(`createNewPromptMemo`);
 
     setMemos([newMemo, ...memos]);
     setSelectedMemoId(newMemo.id);
   };
 
   const handleSelectMemo = (id: string) => {
-    console.log(`${id}`);
     setSelectedMemoId(id);
+  };
+
+  const selectedMemo = memos.find((memo) => memo.id === selectedMemoId);
+
+  const handleDeleteMemo = (id: string) => {
+    const newMemos = memos.filter((memo) => memo.id !== id);
+    setMemos(newMemos);
   };
 
   return (
@@ -49,7 +56,7 @@ function App() {
               zIndex: 2,
             }}
           >
-            <DetailArea></DetailArea>
+            <DetailArea memo={selectedMemo}></DetailArea>
           </Box>
           <Box
             component="main"
@@ -69,10 +76,14 @@ function App() {
                 zIndex: 1,
               }}
             >
-              <ControlForm onClick={handleAddNewMemo}></ControlForm>
+              <ControlForm onAddNewMemo={handleAddNewMemo}></ControlForm>
             </Box>
             <Box sx={{ p: 3 }}>
-              <CardArea memos={memos} onSelectMemo={handleSelectMemo}></CardArea>
+              <CardArea
+                memos={memos}
+                onSelectMemo={handleSelectMemo}
+                onDeleteMemo={handleDeleteMemo}
+              ></CardArea>
             </Box>
           </Box>
         </Box>

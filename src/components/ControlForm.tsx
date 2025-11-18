@@ -4,10 +4,14 @@ import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
 import SortIcon from "@mui/icons-material/Sort";
 
-export function ControlForm() {
+type Props = {
+  onAddNewMemo: () => void;
+};
+
+export function ControlForm({ onAddNewMemo }: Props) {
   return (
     <Box component="form" sx={{ display: "flex", alignItems: "center" }}>
-      <Button size="small" variant="contained">
+      <Button size="small" variant="contained" type="button" onClick={onAddNewMemo}>
         newPropmt
       </Button>
       <InputBase

@@ -11,9 +11,10 @@ import type { PromptMemo } from "../types/PromptMemo";
 type Props = {
   memo: PromptMemo;
   onClick: () => void;
+  onDelete: () => void;
 };
 
-export function PromptCard({ memo, onClick }: Props) {
+export function PromptCard({ memo, onClick, onDelete }: Props) {
   return (
     <Card sx={{ width: 440 }}>
       <CardActionArea sx={{ display: "flex", alignItems: "flex-start" }} onClick={onClick}>
@@ -59,10 +60,17 @@ export function PromptCard({ memo, onClick }: Props) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" variant="text" color="error" sx={{ m: "0 auto 0 0" }}>
+        <Button
+          type="button"
+          size="small"
+          variant="text"
+          color="error"
+          sx={{ m: "0 auto 0 0" }}
+          onClick={onDelete}
+        >
           delete
         </Button>
-        <Button size="small" variant="text" sx={{ m: "0 0 0 auto" }}>
+        <Button type="button" size="small" variant="text" sx={{ m: "0 0 0 auto" }}>
           copy
         </Button>
       </CardActions>

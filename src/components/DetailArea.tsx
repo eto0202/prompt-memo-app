@@ -5,7 +5,15 @@ import { ImageZone } from "./DropImageZone";
 import type { PromptMemo } from "../types/PromptMemo";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
-export function DetailArea(props: PromptMemo) {
+type Props = {
+  memo?: PromptMemo;
+};
+
+export function DetailArea({ memo }: Props) {
+  if (!memo) {
+    return <Box>カードを選択してください</Box>;
+  }
+
   return (
     <Box
       component="form"
@@ -14,15 +22,15 @@ export function DetailArea(props: PromptMemo) {
       autoComplete="off"
     >
       <Box sx={{ display: "flex", fontSize: 15 }}>
-        <Box sx={{ m: "0 0 0 auto" }}>{props.updatedAt}</Box>
+        <Box sx={{ m: "0 0 0 auto" }}>{memo.updatedAt}</Box>
       </Box>
       <ImageZone></ImageZone>
-      <CustomTextField id="PromptName" label="PromptName" />
+      <CustomTextField id="PromptName" label="PromptName" value={memo.characterName} />
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
         <CustomTextField
           id="MainPrompt"
           label="MainPrompt"
-          value={props.mainPrompt}
+          value={memo.mainPrompt}
           multiline
           rows={3}
           isCopy={true}
@@ -39,7 +47,7 @@ export function DetailArea(props: PromptMemo) {
         <CustomTextField
           id="NegativePrompt"
           label="NegativePrompt"
-          value={props.negativePrompt}
+          value={memo.negativePrompt}
           multiline
           rows={2}
           isCopy={true}
@@ -53,7 +61,7 @@ export function DetailArea(props: PromptMemo) {
       <CustomTextField
         id="description"
         label="description"
-        value={props.description}
+        value={memo.description}
         multiline
         rows={2}
         isZoom={true}

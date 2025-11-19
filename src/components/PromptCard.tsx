@@ -10,14 +10,14 @@ import type { PromptMemo } from "../types/PromptMemo";
 
 type Props = {
   memo: PromptMemo;
-  onClick: () => void;
+  onSelect: () => void;
   onDelete: () => void;
 };
 
-export function PromptCard({ memo, onClick, onDelete }: Props) {
+export function PromptCard({ memo, onSelect, onDelete }: Props) {
   return (
     <Card sx={{ width: 440 }}>
-      <CardActionArea sx={{ display: "flex", alignItems: "flex-start" }} onClick={onClick}>
+      <CardActionArea sx={{ display: "flex", alignItems: "flex-start" }} onClick={onSelect}>
         <CardMedia
           component="img"
           image={
@@ -66,7 +66,10 @@ export function PromptCard({ memo, onClick, onDelete }: Props) {
           variant="text"
           color="error"
           sx={{ m: "0 auto 0 0" }}
-          onClick={onDelete}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
         >
           delete
         </Button>

@@ -15,7 +15,7 @@ export function CardArea({ memos, onSelectMemo, onDeleteMemo }: Props) {
         <PromptCard
           key={memo.id}
           memo={memo}
-          onClick={() => onSelectMemo(memo.id)}
+          onSelect={() => onSelectMemo(memo.id)}
           onDelete={() => onDeleteMemo(memo.id)}
         ></PromptCard>
       ))}

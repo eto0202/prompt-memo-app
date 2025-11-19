@@ -4,13 +4,15 @@ import { CardArea } from "./components/CardArea";
 import { DetailArea } from "./components/DetailArea";
 import { ControlForm } from "./components/ControlForm";
 import { useState } from "react";
-import { createNewPromptMemo } from "./utils/memoUtils";
+import { SnackbarProvider } from "./contexts/snackbar/SnackbarProvider";
 import type { PromptMemo } from "./types/PromptMemo";
-import { DUMMY_MEMOS } from "./data/DummyMemos";
+import { UsePromptMemos } from "./hooks/usePromptMemos";
 
 /*
  * TODO:
  *  - URLリストに追加ボタンと全体をポップアップで表示。
+ *  - 削除時に確認画面をダイアログで表示
+ *  - ロジックをカスタムhookに分離。
  *  - テーマ変更ボタンを作成。ダーク、ライト、モノクロ。
  *  - コピーボタンを押した際に選択画面をポップアップで表示。
  *  - 拡大ボタンを押した際にTextField全体をポップアップで表示。
@@ -18,30 +20,29 @@ import { DUMMY_MEMOS } from "./data/DummyMemos";
  */
 
 function App() {
-  const [memos, setMemos] = useState<PromptMemo[]>(DUMMY_MEMOS);
+  const { memos, addMemo, updateMemo, deleteMemo } = UsePromptMemos();
   const [selectedMemoId, setSelectedMemoId] = useState<string | null>(null);
-
-  const handleAddNewMemo = () => {
-    const newMemo = createNewPromptMemo();
-    console.log(`createNewPromptMemo`);
-
-    setMemos([newMemo, ...memos]);
-    setSelectedMemoId(newMemo.id);
-  };
-
-  const handleSelectMemo = (id: string) => {
-    setSelectedMemoId(id);
-  };
 
   const selectedMemo = memos.find((memo) => memo.id === selectedMemoId);
 
+  const handleAddNewMemo = () => {
+    const newMemoId = addMemo();
+    console.log(`createNewPromptMemo`);
+    setSelectedMemoId(newMemoId);
+  };
+
   const handleDeleteMemo = (id: string) => {
-    const newMemos = memos.filter((memo) => memo.id !== id);
-    setMemos(newMemos);
+    if (window.confirm("本当に削除しますか？")) {
+      deleteMemo(id);
+      // 削除したメモが選択されていた場合、選択状態を解除する
+      if (selectedMemoId === id) {
+        setSelectedMemoId(null);
+      }
+    }
   };
 
   return (
-    <>
+    <SnackbarProvider>
       <CssBaseline>
         <Box sx={{ display: "flex", height: "100vh", overflow: "hidden" }}>
           <Box
@@ -81,14 +82,14 @@ function App() {
             <Box sx={{ p: 3 }}>
               <CardArea
                 memos={memos}
-                onSelectMemo={handleSelectMemo}
+                onSelectMemo={setSelectedMemoId}
                 onDeleteMemo={handleDeleteMemo}
               ></CardArea>
             </Box>
           </Box>
         </Box>
       </CssBaseline>
-    </>
+    </SnackbarProvider>
   );
 }
 

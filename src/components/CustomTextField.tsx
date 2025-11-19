@@ -2,13 +2,31 @@ import { Box, IconButton, TextField } from "@mui/material";
 import type { TextFieldProps } from "@mui/material/TextField";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
+import { useSnackbar } from "../contexts/snackbar/useSnackbar";
 
 type Props = TextFieldProps & {
   isCopy?: boolean;
-  isZoom?: boolean;
+  onZoom?: boolean;
 };
 
-export function CustomTextField({ isCopy, isZoom, ...props }: Props) {
+export function CustomTextField({ isCopy, onZoom, ...props }: Props) {
+  const { showSnackbar } = useSnackbar();
+
+  const handleCopyClick = async () => {
+    if (typeof props.value !== "string" || !props.value) {
+      showSnackbar("コピーするテキストがありません。", "warning");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(props.value);
+      showSnackbar(`${props.label} copied!`, "success");
+    } catch (err) {
+      console.error(err);
+      showSnackbar("Failed tocopy", "error");
+    }
+  };
+
   return (
     <Box sx={{ position: "relative", width: "100%" }}>
       <TextField
@@ -33,6 +51,7 @@ export function CustomTextField({ isCopy, isZoom, ...props }: Props) {
       />
       {isCopy && (
         <IconButton
+          onClick={handleCopyClick}
           aria-label={`copy ${props.label}`}
           size="small"
           disableRipple
@@ -60,7 +79,7 @@ export function CustomTextField({ isCopy, isZoom, ...props }: Props) {
         </IconButton>
       )}
 
-      {isZoom && (
+      {onZoom && (
         <IconButton
           aria-label={`zoom ${props.label}`}
           size="small"

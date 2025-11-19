@@ -33,27 +33,18 @@ export function DetailArea({ memo }: Props) {
           value={memo.mainPrompt}
           multiline
           rows={3}
-          isCopy={true}
-          isZoom={true}
+          isCopy
+          onZoom
         />
-        <CustomTextField
-          id="SubPrompt"
-          label="SubPrompt"
-          multiline
-          rows={2}
-          isCopy={true}
-          isZoom={true}
-        />
+        <CustomTextField id="SubPrompt" label="SubPrompt" multiline rows={2} />
         <CustomTextField
           id="NegativePrompt"
           label="NegativePrompt"
           value={memo.negativePrompt}
           multiline
           rows={2}
-          isCopy={true}
-          isZoom={true}
         />
-        <CustomTextField id="Lora" label="Lora" multiline rows={2} isCopy={true} isZoom={true} />
+        <CustomTextField id="Lora" label="Lora" multiline rows={2} />
         <Button variant="outlined" endIcon={<NavigateNextIcon></NavigateNextIcon>}>
           Lora URL
         </Button>
@@ -64,7 +55,6 @@ export function DetailArea({ memo }: Props) {
         value={memo.description}
         multiline
         rows={2}
-        isZoom={true}
       />
       <Button size="small" variant="contained" sx={{ width: "100px", m: "0 auto" }}>
         copy

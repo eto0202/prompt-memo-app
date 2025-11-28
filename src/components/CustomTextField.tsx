@@ -1,8 +1,9 @@
-import { Box, IconButton, TextField } from "@mui/material";
+import { Box, IconButton, Popper, TextField, ToggleButton } from "@mui/material";
 import type { TextFieldProps } from "@mui/material/TextField";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import { useSnackbar } from "../contexts/snackbar/useSnackbar";
+import { useState } from "react";
 
 type Props = TextFieldProps & {
   isCopy?: boolean;
@@ -11,6 +12,8 @@ type Props = TextFieldProps & {
 
 export function CustomTextField({ isCopy, onZoom, ...props }: Props) {
   const { showSnackbar } = useSnackbar();
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [selected, setSelected] = useState(false);
 
   const handleCopyClick = async () => {
     if (typeof props.value !== "string" || !props.value) {
@@ -23,9 +26,18 @@ export function CustomTextField({ isCopy, onZoom, ...props }: Props) {
       showSnackbar(`${props.label} copied!`, "success");
     } catch (err) {
       console.error(err);
-      showSnackbar("Failed tocopy", "error");
+      showSnackbar("Failed to copy", "error");
     }
   };
+
+  const handlePopperClick = (e: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(anchorEl ? null : e.currentTarget);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "textFiled-popper" : undefined;
+
+  const copyIconPosition = onZoom ? 24 : 0;
 
   return (
     <Box sx={{ position: "relative", width: "100%" }}>
@@ -58,7 +70,7 @@ export function CustomTextField({ isCopy, onZoom, ...props }: Props) {
           sx={{
             position: "absolute",
             top: 0,
-            right: 24,
+            right: copyIconPosition,
             zIndex: 1,
             color: "grey.500",
             "&:hover": {
@@ -80,32 +92,63 @@ export function CustomTextField({ isCopy, onZoom, ...props }: Props) {
       )}
 
       {onZoom && (
-        <IconButton
-          aria-label={`zoom ${props.label}`}
-          size="small"
-          disableRipple
-          sx={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            zIndex: 1,
-            color: "grey.500",
-            "&:hover": {
-              color: "primary.main",
-              backgroundColor: "transparent",
-            },
-            "&:active": {
-              color: "primary.dark",
-            },
-            transition: "color 0.2s ease-in-out, transform 0.1s ease-in-out",
-          }}
-        >
-          <ZoomOutMapIcon
+        <>
+          <ToggleButton
+            value="zoom"
+            selected={selected}
+            onChange={() => setSelected((prevSelected) => !prevSelected)}
+            aria-label={`zoom ${props.label}`}
+            aria-describedby={id}
+            size="small"
+            onClick={handlePopperClick}
             sx={{
-              fontSize: 16,
+              position: "absolute",
+              top: 0,
+              right: 0,
+              zIndex: 1,
+              color: "grey.500",
+              border: "none",
+              p: "5px",
+              "&:hover": {
+                color: "primary.main",
+                backgroundColor: "transparent",
+              },
+              "&:active": {
+                color: "primary.dark",
+              },
+              transition: "color 0.2s ease-in-out, transform 0.1s ease-in-out",
             }}
-          ></ZoomOutMapIcon>
-        </IconButton>
+          >
+            <ZoomOutMapIcon
+              sx={{
+                fontSize: 16,
+              }}
+            ></ZoomOutMapIcon>
+          </ToggleButton>
+          <Popper
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            placement="right"
+            keepMounted
+            sx={{ zIndex: 3, pl: 1 }}
+          >
+            <Box
+              sx={{ p: 1, boxShadow: 1, borderRadius: 1, bgcolor: "background.paper", width: 400 }}
+            >
+              <CustomTextField
+                id={props.id}
+                name={props.name}
+                label={props.label}
+                value={props.value}
+                multiline={props.multiline}
+                rows={10}
+                isCopy
+                onChange={props.onChange}
+              ></CustomTextField>
+            </Box>
+          </Popper>
+        </>
       )}
     </Box>
   );

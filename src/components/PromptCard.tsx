@@ -23,7 +23,7 @@ export function PromptCard({ memo, onSelect, onDelete }: Props) {
           image={
             memo.thumbnailUrl || "https://placehold.jp/bbbbbb/ffffff/150x150.png?text=No%20Image"
           }
-          alt={memo.characterName}
+          alt={memo.promptName}
           sx={{
             height: 150,
             width: 150,
@@ -42,7 +42,7 @@ export function PromptCard({ memo, onSelect, onDelete }: Props) {
             {memo.updatedAt}
           </Box>
           <Typography gutterBottom variant="h5" component="div" noWrap>
-            {memo.characterName}
+            {memo.promptName || "No Name"}
           </Typography>
           <Typography
             variant="body2"
@@ -55,7 +55,7 @@ export function PromptCard({ memo, onSelect, onDelete }: Props) {
               WebkitBoxOrient: "vertical",
             }}
           >
-            <Box>{memo.mainPrompt}</Box>
+            {memo.mainPrompt || "No Prompt"}
           </Typography>
         </CardContent>
       </CardActionArea>

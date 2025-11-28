@@ -1,31 +1,33 @@
 import { useState, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
-import type { PromptMemo } from "../types/PromptMemo";
+import type { PromptMemo, Lora } from "../types/PromptMemo";
 import { DUMMY_MEMOS } from "../data/DummyMemos";
 
 export type UsePromptMemosResult = {
   memos: PromptMemo[];
   addMemo: () => string;
   updateMemo: (updatedMemo: PromptMemo) => void;
-  deleteMemo: (id: string) => void;
+  deleteMemo: (memoId: string) => void;
+  updateLoras: (memoId: string, loras: Lora[]) => void;
 };
 
-export function UsePromptMemos(): UsePromptMemosResult {
+export function usePromptMemos(): UsePromptMemosResult {
   const [memos, setMemos] = useState<PromptMemo[]>(DUMMY_MEMOS);
 
   const addMemo = useCallback((): string => {
-    const now = new Date().toDateString();
+    const now = new Date().toLocaleDateString();
     const newMemo: PromptMemo = {
       id: uuidv4(),
       createdAt: now,
       updatedAt: now,
 
-      characterName: "No Name",
+      promptName: "",
       thumbnailUrl: "",
 
       mainPrompt: "",
-      subPrompts: [],
+      subPrompt: "",
       negativePrompt: "",
+      loraPrompt: "",
 
       loras: [],
 
@@ -39,14 +41,31 @@ export function UsePromptMemos(): UsePromptMemosResult {
   const updateMemo = useCallback((updatedMemo: PromptMemo) => {
     setMemos((prevMemos) =>
       prevMemos.map((memo) =>
-        memo.id === updatedMemo.id ? { ...updatedMemo, updatedAt: new Date().toDateString() } : memo
+        memo.id === updatedMemo.id
+          ? { ...updatedMemo, updatedAt: new Date().toLocaleDateString() }
+          : memo
       )
     );
   }, []);
 
-  const deleteMemo = useCallback((id: string) => {
-    setMemos((prevMemos) => prevMemos.filter((memo) => memo.id !== id));
+  const deleteMemo = useCallback((memoId: string) => {
+    setMemos((prevMemos) => prevMemos.filter((memo) => memo.id !== memoId));
   }, []);
 
-  return { memos, addMemo, updateMemo, deleteMemo };
+  const updateLoras = useCallback((memoId: string, newLoras: Lora[]) => {
+    setMemos((prevMemos) =>
+      prevMemos.map((memo) => {
+        if (memo.id !== memoId) {
+          return memo;
+        }
+        return {
+          ...memo,
+          loras: newLoras,
+          updatedAt: new Date().toLocaleDateString(),
+        };
+      })
+    );
+  }, []);
+
+  return { memos, addMemo, updateMemo, deleteMemo, updateLoras };
 }
